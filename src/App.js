@@ -1,5 +1,5 @@
 import * as C from './App.styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Axios from 'axios';
 
 function App(){
@@ -14,6 +14,19 @@ function App(){
       defense: "",
       type: ""
   });
+
+  useEffect(() => {
+    document.addEventListener('keydown', detectKeyDown, true)
+  }, [pokemonName]);
+
+  const detectKeyDown = (e) => {
+    if(e.key === 'Enter'){
+      console.log('enter pressed');
+      console.log(pokemonName);
+      searchPokemon();
+    };
+  };
+
  const searchPokemon = () => {
   Axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`).then((response) =>{
     setPokemon({
@@ -33,7 +46,7 @@ function App(){
     <C.Container>
       <C.TitleSection>
         <h1>Pokemon Stats</h1>
-        <C.Input type='text' onChange={e => setPokemonName(e.target.value)}></C.Input>
+        <C.Input type='text' onChange={e => setPokemonName(e.target.value.toLowerCase())}></C.Input>
         <C.Button onClick={searchPokemon}>Search</C.Button>
       </C.TitleSection>
       <C.DisplaySection>
